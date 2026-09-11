@@ -1,0 +1,9 @@
+langchain-core
+langgraph
+langfuse
+mcp
+fastmcp
+pydantic
+openai
+python-dotenv
+tabulate

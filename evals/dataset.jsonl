@@ -1,0 +1,25 @@
+{"id": 1, "query": "¿Cuántos días de vacaciones me corresponden por 3 años de antigüedad?", "expected_domain": "HR"}
+{"id": 2, "query": "¿Cómo solicito la licencia por maternidad o paternidad?", "expected_domain": "HR"}
+{"id": 3, "query": "¿Cuál es la política de trabajo remoto e híbrido de Nubbix?", "expected_domain": "HR"}
+{"id": 4, "query": "¿Cómo accedo a los descuentos en gimnasios corporativos?", "expected_domain": "HR"}
+{"id": 5, "query": "¿Qué documentación debo presentar para justificar una licencia médica?", "expected_domain": "HR"}
+{"id": 6, "query": "¿Cuándo se realiza la evaluación de desempeño anual?", "expected_domain": "HR"}
+{"id": 7, "query": "Olvidé la contraseña de mi cuenta institucional de Google.", "expected_domain": "IT"}
+{"id": 8, "query": "¿Cómo me conecto a la VPN de la empresa desde casa?", "expected_domain": "IT"}
+{"id": 9, "query": "Mi laptop no enciende y necesito asistencia técnica urgente.", "expected_domain": "IT"}
+{"id": 10, "query": "¿Cuál es el procedimiento para solicitar un monitor secundario?", "expected_domain": "IT"}
+{"id": 11, "query": "¿Qué software está autorizado para instalar en las computadoras?", "expected_domain": "IT"}
+{"id": 12, "query": "No puedo conectarme a la red WiFi de la oficina central.", "expected_domain": "IT"}
+{"id": 13, "query": "¿Cuál es el tope máximo de reembolso para un almuerzo de trabajo?", "expected_domain": "Finance"}
+{"id": 14, "query": "¿Cómo rindo los gastos de un viaje corporativo?", "expected_domain": "Finance"}
+{"id": 15, "query": "¿Qué día del mes se deposita el sueldo?", "expected_domain": "Finance"}
+{"id": 16, "query": "¿Cómo solicito el comprobante de retención de impuestos?", "expected_domain": "Finance"}
+{"id": 17, "query": "¿Cuál es el formato requerido para cargar una factura de proveedor?", "expected_domain": "Finance"}
+{"id": 18, "query": "Necesito solicitar un adelanto de viáticos para un evento.", "expected_domain": "Finance"}
+{"id": 19, "query": "Por favor quiero crear ticket para cambiar la batería de mi notebook.", "expected_domain": "Ticket"}
+{"id": 20, "query": "Crear ticket para solicitar acceso a la base de datos de producción.", "expected_domain": "Ticket"}
+{"id": 21, "query": "¿Cuál es el estado del ticket TICK-8A9B2C?", "expected_domain": "Ticket"}
+{"id": 22, "query": "Quiero consultar estado del ticket TICK-10001", "expected_domain": "Ticket"}
+{"id": 23, "query": "Crear ticket por falla en el sistema de liquidaciones.", "expected_domain": "Ticket"}
+{"id": 24, "query": "Por favor crear ticket para configurar mi e-mail corporativo.", "expected_domain": "Ticket"}
+{"id": 25, "query": "Consultar estado del ticket TICK-F4E3D2", "expected_domain": "Ticket"}
