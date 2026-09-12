@@ -1,14 +1,13 @@
-import sqlite3
 from pathlib import Path
 from openai import OpenAI
-
+from mcp_server.db import init_db, get_connection
 
 class DomainRAGAgents:
     """Agentes especialistas en dominios HR, IT y Finance utilizando corpus RAG de M2."""
     def __init__(self, openai_client: OpenAI, model: str = "gpt-4o-mini"):
         self.client = openai_client
         self.model = model
-        self.mcp_db_path = Path(__file__).parent.parent / "mcp_server" / "tickets.db"
+        init_db()
 
     def _get_corpus_context(self, domain: str) -> str:
         base_dir = Path(__file__).parent.parent / "data" / "corpus"
@@ -42,7 +41,7 @@ class DomainRAGAgents:
 
     def execute_mcp_tool(self, tool_name: str, args: dict) -> str:
         """Conexión cliente con la base de datos MCP de tickets."""
-        conn = sqlite3.connect(self.mcp_db_path)
+        conn = get_connection()
         cursor = conn.cursor()
         if tool_name == "create_ticket":
             import uuid

@@ -99,7 +99,7 @@ OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxxxxxxxxx
 OPENAI_MODEL=gpt-4o-mini
 LANGFUSE_PUBLIC_KEY=pk-lf-xxxxxxxxxxxxxxxxxxxx
 LANGFUSE_SECRET_KEY=sk-lf-xxxxxxxxxxxxxxxxxxxx
-LANGFUSE_HOST=https://cloud.langfuse.com
+LANGFUSE_BASE_URL=https://cloud.langfuse.com
 ```
 
 ---
@@ -119,5 +119,5 @@ python -m evals.runner
 Iniciar la aplicación interactiva:
 
 ```bash
-python main.py
+python -m src.main
 ```
