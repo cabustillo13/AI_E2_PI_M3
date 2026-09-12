@@ -126,13 +126,24 @@ python -m agents.handwritten_agent
 Ejemplo de salida de consola:
 
 ```text
---- DEMO AGENTE REACT A MANO (SIN FRAMEWORK) ---
-[Paso 1] Salida LLM: ACTION: consultar_vacaciones
-[Paso 1] Observación Tool: Políticas Nubbix: Corresponden 14 días corridos de vacaciones tras el primer año.
-[Paso 2] Salida LLM: En tu primer año en Nubbix, te corresponden 14 días corridos de vacaciones.
+--- DEMO 1: AGENTE REACT A MANO (SIN FRAMEWORK, con LLM real) ---
+[Paso 1] Salida LLM: En tu primer año de trabajo, generalmente te corresponden 14 días de vacaciones. Sin embargo, esto puede variar según la legislación laboral de tu país o la política de la empresa. Te recomiendo consultar el manual del empleado o el departamento de recursos humanos para obtener información específica.
 
 Resultado Final:
-En tu primer año en Nubbix, te corresponden 14 días corridos de vacaciones.
+En tu primer año de trabajo, generalmente te corresponden 14 días de vacaciones. Sin embargo, esto puede variar según la legislación laboral de tu país o la política de la empresa. Te recomiendo consultar el manual del empleado o el departamento de recursos humanos para obtener información específica.
+
+
+--- DEMO 2: LOOP QUE NO CONVERGE (cliente simulado, sin red) ---
+Muestra cómo la stopping rule corta un loop que pide siempre una tool inexistente.
+[Paso 1] Salida LLM: ACTION: tool_que_no_existe
+[Paso 1] Error recuperable (1/5): La herramienta 'tool_que_no_existe' no existe. Tools disponibles: ['consultar_vacaciones', 'consultar_wifi', 'consultar_reintegro']
+[Paso 2] Salida LLM: ACTION: tool_que_no_existe
+[Paso 2] Error recuperable (2/5): La herramienta 'tool_que_no_existe' no existe. Tools disponibles: ['consultar_vacaciones', 'consultar_wifi', 'consultar_reintegro']
+[Paso 3] Salida LLM: ACTION: tool_que_no_existe
+[Paso 3] Error recuperable (3/5): La herramienta 'tool_que_no_existe' no existe. Tools disponibles: ['consultar_vacaciones', 'consultar_wifi', 'consultar_reintegro']
+
+Resultado Final (esperado: corte por stopping rule):
+Corte por Stopping Rule: se superó el presupuesto máximo de pasos (posible loop sin convergencia).
 ```
 
 ---
@@ -196,22 +207,44 @@ python -m src.main
 Ejemplo de salida de consola:
 
 ```text
---- DEMO 1: AGENTE REACT A MANO (SIN FRAMEWORK, con LLM real) ---
-[Paso 1] Salida LLM: En tu primer año de trabajo, generalmente te corresponden 14 días de vacaciones. Sin embargo, esto puede variar según la legislación laboral de tu país o la política de la empresa. Te recomiendo consultar el manual del empleado o el departamento de recursos humanos para obtener información específica.
+Mesa de Ayuda Multi-Agente Nubbix
+Escriba 'salir' para terminar.
 
-Resultado Final:
-En tu primer año de trabajo, generalmente te corresponden 14 días de vacaciones. Sin embargo, esto puede variar según la legislación laboral de tu país o la política de la empresa. Te recomiendo consultar el manual del empleado o el departamento de recursos humanos para obtener información específica.
+Empleado: mi laptop no enciende
 
+[Orquestador] Intención detectada: IT
+[Agente Especialista] Respuesta:
+Claro, aquí tienes las instrucciones paso a paso para solucionar el problema de una laptop que no enciende:
 
---- DEMO 2: LOOP QUE NO CONVERGE (cliente simulado, sin red) ---
-Muestra cómo la stopping rule corta un loop que pide siempre una tool inexistente.
-[Paso 1] Salida LLM: ACTION: tool_que_no_existe
-[Paso 1] Error recuperable (1/5): La herramienta 'tool_que_no_existe' no existe. Tools disponibles: ['consultar_vacaciones', 'consultar_wifi', 'consultar_reintegro']
-[Paso 2] Salida LLM: ACTION: tool_que_no_existe
-[Paso 2] Error recuperable (2/5): La herramienta 'tool_que_no_existe' no existe. Tools disponibles: ['consultar_vacaciones', 'consultar_wifi', 'consultar_reintegro']
-[Paso 3] Salida LLM: ACTION: tool_que_no_existe
-[Paso 3] Error recuperable (3/5): La herramienta 'tool_que_no_existe' no existe. Tools disponibles: ['consultar_vacaciones', 'consultar_wifi', 'consultar_reintegro']
+### Instrucciones para solucionar el problema de la laptop que no enciende:
 
-Resultado Final (esperado: corte por stopping rule):
-Corte por Stopping Rule: se superó el presupuesto máximo de pasos (posible loop sin convergencia).
+1. **Verifica la conexión de energía:**
+   - Asegúrate de que el adaptador de corriente esté correctamente conectado a la laptop y a la toma de corriente.
+   - Comprueba que la luz indicadora del cargador esté encendida. Si no está encendida, prueba con otra toma de corriente.
+
+2. **Revisa la batería:**
+   - Si tu laptop tiene una batería extraíble, apágala, desconéctala del cargador y retira la batería.
+   - Mantén presionado el botón de encendido durante 15-20 segundos para liberar cualquier carga residual.
+   - Vuelve a colocar la batería, conecta el cargador y trata de encender la laptop nuevamente.
+
+3. **Realiza un reinicio forzado:**
+   - Si la laptop no responde, intenta hacer un reinicio forzado. Mantén presionado el botón de encendido durante 10-15 segundos hasta que se apague completamente.
+   - Luego, espera unos segundos y vuelve a encenderla.
+
+4. **Conéctate a un monitor externo (si es posible):**
+   - Si tienes acceso a un monitor externo, conéctalo a la laptop. Esto te ayudará a determinar si el problema es la pantalla de la laptop o si es un problema más grave.
+   - Cambia la entrada del monitor externo para ver si la laptop está funcionando.
+
+5. **Escucha los sonidos:**
+   - Presta atención a cualquier sonido que haga la laptop al intentar encenderse (como ventiladores o pitidos). Esto puede indicar un problema específico.
+
+6. **Si nada funciona:**
+   - Si después de seguir estos pasos la laptop sigue sin encender, es posible que necesites asistencia técnica.
+   - Reporta el incidente en el canal de Slack #it-help o crea un ticket en la mesa de ayuda.
+
+### Recuerda:
+- Si el incidente ocurre durante un viaje de trabajo, puedes solicitar un equipo de reemplazo temporal coordinando con IT.
+- Si el problema es por pérdida, robo o daño grave, sigue el procedimiento correspondiente para notificar a IT y presentar una denuncia si es necesario.
+
+Si necesitas más ayuda, no dudes en contactarnos.
 ```
