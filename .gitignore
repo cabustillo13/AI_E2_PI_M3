@@ -1,6 +1,9 @@
 # Base de datos tipo SQLite
 tickets.db
 
+# ChromaDB files
+data/chroma_db/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

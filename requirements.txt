@@ -3,6 +3,7 @@ langgraph
 langfuse
 mcp
 fastmcp
+chromadb
 pydantic
 openai
 python-dotenv

@@ -103,6 +103,8 @@ OPENAI_MODEL=gpt-4o-mini
 LANGFUSE_PUBLIC_KEY=pk-lf-xxxxxxxxxxxxxxxxxxxx
 LANGFUSE_SECRET_KEY=sk-lf-xxxxxxxxxxxxxxxxxxxx
 LANGFUSE_BASE_URL=https://cloud.langfuse.com
+EMBEDDING_MODEL=text-embedding-3
+CHROMA_PERSIST_DIR=./data/chroma_db
 ```
 
 ---
@@ -145,36 +147,41 @@ python -m evals.runner
 
 ### Reporte de Métricas
 
-| ID | Consulta | Esperado | Obtenido | Resultado |
-|----|----------|----------|----------|-----------|
-| 1 | ¿Cuántos días de vacaciones me correspon... | HR | HR | SUCCESS |
-| 2 | ¿Cómo solicito la licencia por maternida... | HR | HR | SUCCESS |
-| 3 | ¿Cuál es la política de trabajo remoto e... | HR | HR | SUCCESS |
-| 4 | ¿Cómo accedo a los descuentos en gimnasi... | HR | HR | SUCCESS |
-| 5 | ¿Qué documentación debo presentar para j... | HR | HR | SUCCESS |
-| 6 | ¿Cuándo se realiza la evaluación de dese... | HR | HR | SUCCESS |
-| 7 | Olvidé la contraseña de mi cuenta instit... | IT | IT | SUCCESS |
-| 8 | ¿Cómo me conecto a la VPN de la empresa ... | IT | IT | SUCCESS |
-| 9 | Mi laptop no enciende y necesito asisten... | IT | IT | SUCCESS |
-| 10 | ¿Cuál es el procedimiento para solicitar... | IT | IT | SUCCESS |
-| 11 | ¿Qué software está autorizado para insta... | IT | IT | SUCCESS |
-| 12 | No puedo conectarme a la red WiFi de la ... | IT | IT | SUCCESS |
-| 13 | ¿Cuál es el tope máximo de reembolso par... | Finance | Finance | SUCCESS |
-| 14 | ¿Cómo rindo los gastos de un viaje corpo... | Finance | Finance | SUCCESS |
-| 15 | ¿Qué día del mes se deposita el sueldo?... | Finance | Finance | SUCCESS |
-| 16 | ¿Cómo solicito el comprobante de retenci... | Finance | Finance | SUCCESS |
-| 17 | ¿Cuál es el formato requerido para carga... | Finance | Finance | SUCCESS |
-| 18 | Necesito solicitar un adelanto de viátic... | Finance | Finance | SUCCESS |
-| 19 | Por favor quiero crear ticket para cambi... | Ticket | IT | FAIL |
-| 20 | Crear ticket para solicitar acceso a la ... | Ticket | Ticket | SUCCESS |
-| 21 | ¿Cuál es el estado del ticket TICK-8A9B2... | Ticket | Ticket | SUCCESS |
-| 22 | Quiero consultar estado del ticket TICK-... | Ticket | Ticket | SUCCESS |
-| 23 | Crear ticket por falla en el sistema de ... | Ticket | Ticket | SUCCESS |
-| 24 | Por favor crear ticket para configurar m... | Ticket | Ticket | SUCCESS |
-| 25 | Consultar estado del ticket TICK-F4E3D2... | Ticket | Ticket | SUCCESS |
+## Reporte de Evaluación de Trayectorias M3
+
+| ID | Consulta | Esperado | Obtenido | Routing | E2E |
+|----|----------|----------|----------|---------|-----|
+| 1 | ¿Cuántos días de vacaciones me correspon... | HR | HR | SUCCESS | SUCCESS |
+| 2 | ¿Cómo solicito la licencia por maternida... | HR | HR | SUCCESS | SUCCESS |
+| 3 | ¿Cuál es la política de trabajo remoto e... | HR | HR | SUCCESS | SUCCESS |
+| 4 | ¿Cómo accedo a los descuentos en gimnasi... | HR | HR | SUCCESS | SUCCESS |
+| 5 | ¿Qué documentación debo presentar para j... | HR | HR | SUCCESS | SUCCESS |
+| 6 | ¿Cuándo se realiza la evaluación de dese... | HR | HR | SUCCESS | SUCCESS |
+| 7 | Olvidé la contraseña de mi cuenta instit... | IT | IT | SUCCESS | SUCCESS |
+| 8 | ¿Cómo me conecto a la VPN de la empresa ... | IT | IT | SUCCESS | SUCCESS |
+| 9 | Mi laptop no enciende y necesito asisten... | IT | IT | SUCCESS | SUCCESS |
+| 10 | ¿Cuál es el procedimiento para solicitar... | IT | IT | SUCCESS | SUCCESS |
+| 11 | ¿Qué software está autorizado para insta... | IT | IT | SUCCESS | SUCCESS |
+| 12 | No puedo conectarme a la red WiFi de la ... | IT | IT | SUCCESS | SUCCESS |
+| 13 | ¿Cuál es el tope máximo de reembolso par... | Finance | Finance | SUCCESS | SUCCESS |
+| 14 | ¿Cómo rindo los gastos de un viaje corpo... | Finance | Finance | SUCCESS | SUCCESS |
+| 15 | ¿Qué día del mes se deposita el sueldo?... | Finance | HR | FAIL | FAIL |
+| 16 | ¿Cómo solicito el comprobante de retenci... | Finance | Finance | SUCCESS | SUCCESS |
+| 17 | ¿Cuál es el formato requerido para carga... | Finance | Finance | SUCCESS | SUCCESS |
+| 18 | Necesito solicitar un adelanto de viátic... | Finance | Finance | SUCCESS | SUCCESS |
+| 19 | Por favor quiero crear ticket para cambi... | Ticket | Ticket | SUCCESS | SUCCESS |
+| 20 | Crear ticket para solicitar acceso a la ... | Ticket | Ticket | SUCCESS | SUCCESS |
+| 21 | ¿Cuál es el estado del ticket TICK-8A9B2... | Ticket | Ticket | SUCCESS | FAIL |
+| 22 | Quiero consultar estado del ticket TICK-... | Ticket | Ticket | SUCCESS | FAIL |
+| 23 | Crear ticket por falla en el sistema de ... | Ticket | Ticket | SUCCESS | SUCCESS |
+| 24 | Por favor crear ticket para configurar m... | Ticket | Ticket | SUCCESS | SUCCESS |
+| 25 | Consultar estado del ticket TICK-F4E3D2... | Ticket | Ticket | SUCCESS | FAIL |
 
 **Accuracy de Routing:** 96.00% (24/25)  
-**Tasa de Éxito End-to-End:** 96.00%
+**Tasa de Éxito End-to-End:** 84.00% (21/25)
+
+> **Sesión de Langfuse para esta corrida:** `eval_run_20260912T040857`  
+> (buscala en Langfuse Cloud > Sessions para navegar cada trace individualmente)
 
 ---
 
@@ -189,41 +196,22 @@ python -m src.main
 Ejemplo de salida de consola:
 
 ```text
-Mesa de Ayuda Multi-Agente Nubbix
-Escriba 'salir' para terminar.
+--- DEMO 1: AGENTE REACT A MANO (SIN FRAMEWORK, con LLM real) ---
+[Paso 1] Salida LLM: En tu primer año de trabajo, generalmente te corresponden 14 días de vacaciones. Sin embargo, esto puede variar según la legislación laboral de tu país o la política de la empresa. Te recomiendo consultar el manual del empleado o el departamento de recursos humanos para obtener información específica.
 
-Empleado: mi laptop no enciende
+Resultado Final:
+En tu primer año de trabajo, generalmente te corresponden 14 días de vacaciones. Sin embargo, esto puede variar según la legislación laboral de tu país o la política de la empresa. Te recomiendo consultar el manual del empleado o el departamento de recursos humanos para obtener información específica.
 
-[Orquestador] Intención detectada: IT
-[Agente Especialista] Respuesta:
-Claro, aquí tienes las instrucciones paso a paso para resolver el problema de tu laptop que no enciende:
 
-### Instrucciones para solucionar el problema de la laptop que no enciende
+--- DEMO 2: LOOP QUE NO CONVERGE (cliente simulado, sin red) ---
+Muestra cómo la stopping rule corta un loop que pide siempre una tool inexistente.
+[Paso 1] Salida LLM: ACTION: tool_que_no_existe
+[Paso 1] Error recuperable (1/5): La herramienta 'tool_que_no_existe' no existe. Tools disponibles: ['consultar_vacaciones', 'consultar_wifi', 'consultar_reintegro']
+[Paso 2] Salida LLM: ACTION: tool_que_no_existe
+[Paso 2] Error recuperable (2/5): La herramienta 'tool_que_no_existe' no existe. Tools disponibles: ['consultar_vacaciones', 'consultar_wifi', 'consultar_reintegro']
+[Paso 3] Salida LLM: ACTION: tool_que_no_existe
+[Paso 3] Error recuperable (3/5): La herramienta 'tool_que_no_existe' no existe. Tools disponibles: ['consultar_vacaciones', 'consultar_wifi', 'consultar_reintegro']
 
-1. **Verifica la conexión de energía:**
-   - Asegúrate de que el adaptador de corriente esté correctamente conectado a la laptop y a la toma de corriente.
-   - Comprueba que la luz indicadora del adaptador de corriente esté encendida. Si no está encendida, prueba con otra toma de corriente.
-
-2. **Revisa la batería:**
-   - Si tu laptop tiene una batería extraíble, apágala, desconéctala de la corriente, retira la batería y vuelve a colocarla. Luego, intenta encenderla nuevamente.
-   - Si la batería no es extraíble, asegúrate de que esté bien conectada.
-
-3. **Realiza un reinicio forzado:**
-   - Mantén presionado el botón de encendido durante al menos 10-15 segundos. Esto puede ayudar a reiniciar el hardware.
-   - Después de soltar el botón, espera unos segundos y vuelve a intentar encender la laptop.
-
-4. **Conecta un monitor externo (opcional):**
-   - Si tienes un monitor externo disponible, conéctalo a la laptop para verificar si el problema está relacionado con la pantalla. Si el monitor externo muestra la imagen, el problema podría ser la pantalla de la laptop.
-
-5. **Escucha los sonidos:**
-   - Presta atención a cualquier sonido que haga la laptop al intentar encenderla (como ventiladores o pitidos). Esto puede indicar un problema específico.
-
-6. **Si la laptop sigue sin encender:**
-   - Si después de seguir estos pasos la laptop no enciende, es posible que necesites asistencia técnica.
-   - Notifica inmediatamente al canal de Slack #it-ops y envía un email a it@nubbix.com para reportar el problema.
-
-7. **Documenta el problema:**
-   - Anota cualquier mensaje de error o comportamiento inusual que hayas notado al intentar encender la laptop. Esto será útil para el equipo de IT.
-
-Recuerda que si tu laptop presenta daños físicos evidentes, como golpes o caídas, es importante mencionarlo al equipo de IT.
+Resultado Final (esperado: corte por stopping rule):
+Corte por Stopping Rule: se superó el presupuesto máximo de pasos (posible loop sin convergencia).
 ```
