@@ -1,56 +1,62 @@
-from typing import Dict, Any, List, Callable, Tuple
+import os
 from openai import OpenAI
+
+# Cargar variables de entorno desde el archivo .env
+from dotenv import load_dotenv
+load_dotenv()
 
 
 class HandwrittenReActAgent:
-    """Demostración pedagógica del loop ReAct a mano sin framework."""
-    def __init__(self, client: OpenAI, model: str, tools: Dict[str, Callable], max_steps: int = 5):
-        self.client = client
-        self.model = model
-        self.tools = tools
+    """Loop ReAct a mano sin framework."""
+
+    def __init__(self, max_steps: int = 3):
+        self.client = OpenAI()
+        self.model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
         self.max_steps = max_steps
 
-    def run(self, user_prompt: str, system_prompt: str) -> Tuple[str, List[Dict[str, Any]]]:
+    def _execute_tool(self, action_name: str) -> str:
+        """Ejecución de herramientas del agente."""
+        tools = {
+            "consultar_vacaciones": "Políticas Nubbix: Corresponden 14 días corridos de vacaciones tras el primer año."
+        }
+        return tools.get(action_name, f"Error recuperable: La herramienta '{action_name}' no existe.")
+
+    def run(self, user_query: str) -> str:
+        sys_prompt = (
+            "Eres el asistente de RRHH de Nubbix.\n"
+            "Si necesitas consultar la política de vacaciones responde exactamente: ACTION: consultar_vacaciones\n"
+            "Si ya tienes la respuesta, responde directamente al usuario de forma clara."
+        )
+
         messages = [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt}
+            {"role": "system", "content": sys_prompt},
+            {"role": "user", "content": user_query}
         ]
-        history = []
-        step = 0
 
-        while step < self.max_steps:
-            step += 1
-            try:
-                response = self.client.chat.completions.create(
-                    model=self.model,
-                    messages=messages,
-                    temperature=0.0
-                )
-                output = response.choices[0].message.content or ""
-                messages.append({"role": "assistant", "content": output})
-                history.append({"step": step, "type": "thought", "content": output})
+        for step in range(1, self.max_steps + 1):
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+                temperature=0.0
+            )
+            output = response.choices[0].message.content or ""
+            print(f"[Paso {step}] Salida LLM: {output}")
 
-                if "FINAL_ANSWER:" in output:
-                    return output.split("FINAL_ANSWER:")[-1].strip(), history
+            if "ACTION:" not in output:
+                return output
 
-                if "ACTION:" in output and "ACTION_INPUT:" in output:
-                    lines = output.split("\n")
-                    action = [l for l in lines if "ACTION:" in l][0].replace("ACTION:", "").strip()
-                    arg = [l for l in lines if "ACTION_INPUT:" in l][0].replace("ACTION_INPUT:", "").strip()
+            action = output.split("ACTION:")[-1].strip()
+            observation = self._execute_tool(action)
+            print(f"[Paso {step}] Observación Tool: {observation}")
 
-                    if action not in self.tools:
-                        obs = f"Error recuperable: La herramienta '{action}' no existe."
-                    else:
-                        obs = self.tools[action](arg)
+            messages.append({"role": "assistant", "content": output})
+            messages.append({"role": "user", "content": f"OBSERVACIÓN: {observation}"})
 
-                    messages.append({"role": "user", "content": f"OBSERVATION: {obs}"})
-                    history.append({"step": step, "type": "observation", "content": obs})
-                else:
-                    messages.append({"role": "user", "content": "Formato requerido: Usa ACTION/ACTION_INPUT o FINAL_ANSWER."})
+        return "Corte por Stopping Rule: Se superó el presupuesto máximo de pasos."
 
-            except Exception as e:
-                err_msg = f"Error de ejecución recuperable: {str(e)}"
-                history.append({"step": step, "type": "error", "content": err_msg})
-                messages.append({"role": "user", "content": f"Sucedió un error: {err_msg}. Reintenta la acción."})
 
-        return "Corte por Stopping Rule: Se ha excedido el presupuesto máximo de iteraciones.", history
+if __name__ == "__main__":
+    print("--- DEMO AGENTE REACT A MANO (SIN FRAMEWORK) ---")
+    agent = HandwrittenReActAgent(max_steps=3)
+    resultado = agent.run("¿Cuántos días de vacaciones me corresponden en mi primer año?")
+    print(f"\nResultado Final:\n{resultado}\n")

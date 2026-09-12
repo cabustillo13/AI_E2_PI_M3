@@ -2,8 +2,10 @@ import uuid
 from fastmcp import FastMCP
 from mcp_server.db import init_db, get_connection
 
+
 mcp = FastMCP("Nubbix-Tickets-DB")
 init_db()
+
 
 @mcp.tool()
 def create_ticket(employee_email: str, category: str, description: str) -> str:
@@ -18,6 +20,7 @@ def create_ticket(employee_email: str, category: str, description: str) -> str:
     conn.commit()
     conn.close()
     return f"Ticket registrado con éxito. ID: {ticket_id} | Estado: OPEN"
+
 
 @mcp.tool()
 def get_ticket_status(ticket_id: str) -> str:
