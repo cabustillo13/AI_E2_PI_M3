@@ -18,8 +18,8 @@
 {"id": 18, "query": "Necesito solicitar un adelanto de viáticos para un evento.", "expected_domain": "Finance"}
 {"id": 19, "query": "Por favor quiero crear ticket para cambiar la batería de mi notebook.", "expected_domain": "Ticket"}
 {"id": 20, "query": "Crear ticket para solicitar acceso a la base de datos de producción.", "expected_domain": "Ticket"}
-{"id": 21, "query": "¿Cuál es el estado del ticket TICK-8A9B2C?", "expected_domain": "Ticket"}
-{"id": 22, "query": "Quiero consultar estado del ticket TICK-10001", "expected_domain": "Ticket"}
+{"id": 21, "query": "¿Cuál es el estado del ticket {ticket_id}?", "expected_domain": "Ticket", "requires_ticket_id": true}
+{"id": 22, "query": "Quiero consultar estado del ticket {ticket_id}", "expected_domain": "Ticket", "requires_ticket_id": true}
 {"id": 23, "query": "Crear ticket por falla en el sistema de liquidaciones.", "expected_domain": "Ticket"}
 {"id": 24, "query": "Por favor crear ticket para configurar mi e-mail corporativo.", "expected_domain": "Ticket"}
-{"id": 25, "query": "Consultar estado del ticket TICK-F4E3D2", "expected_domain": "Ticket"}
+{"id": 25, "query": "Consultar estado del ticket {ticket_id}", "expected_domain": "Ticket", "requires_ticket_id": true}

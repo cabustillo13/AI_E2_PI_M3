@@ -68,6 +68,7 @@ class NubbixHelpdeskGraph:
         - "¿Cuál es el estado del ticket TICK-8A9B2?" -> Ticket
         - "¿Cuántos días de vacaciones tengo?" -> HR
         - "¿Cuál es el tope de reembolso de viáticos?" -> Finance
+        - "¿Qué día del mes se deposita el sueldo?" -> Finance (pagos y fechas de depósito son Finance, aunque el sueldo en sí sea un tema de RRHH)
 
         Consulta: "{state['user_query']}"
         Responde ÚNICAMENTE con una palabra: HR, IT, Finance o Ticket.

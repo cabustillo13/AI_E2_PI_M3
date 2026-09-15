@@ -13,6 +13,7 @@ es navegable trace por trace en Langfuse, no solo un número en la terminal.
 """
 import json
 import os
+import re
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -28,6 +29,30 @@ from agents.orchestrator import NubbixHelpdeskGraph
 # Cargar variables de entorno desde el archivo .env
 from dotenv import load_dotenv
 load_dotenv()
+
+_TICKET_ID_RE = re.compile(r"TICK-[A-Z0-9]+", re.IGNORECASE)
+
+
+def _provision_real_ticket_id(orchestrator: NubbixHelpdeskGraph, session_id: str) -> str | None:
+    """Crea un ticket REAL a través del propio pipeline del agente (create -> confirm
+    vía interrupt -> MCP real) y devuelve el ID que efectivamente generó el server MCP.
+
+    Esto reemplaza cualquier ID hardcodeado en el dataset: como `create_ticket` genera
+    IDs aleatorios (uuid4), la única forma de tener un ID que exista de verdad en la DB
+    es crearlo primero por el mismo camino que usaría un empleado real, y reusar el ID
+    que la propia trayectoria devolvió.
+    """
+    thread_id = str(uuid.uuid4())
+    out = orchestrator.run(
+        "Crear ticket para: incidente de prueba generado por la suite de evals de trayectoria.",
+        session_id=session_id,
+        thread_id=thread_id,
+    )
+    if out.get("awaiting_confirmation"):
+        out = orchestrator.resume(thread_id=thread_id, approved=True, session_id=session_id)
+
+    match = _TICKET_ID_RE.search(out.get("response") or "")
+    return match.group(0).upper() if match else None
 
 
 def _is_e2e_success(case: dict, predicted_domain: str, response: str) -> bool:
@@ -59,8 +84,17 @@ def run_evals():
     results_table = []
 
     for case in cases:
+        query = case["query"]
+
+        # Si el caso necesita un ticket_id real (consultas de "estado"), lo creamos
+        # primero de verdad a través del propio agente y usamos el ID que devolvió
+        # el server MCP. Nada hardcodeado: el ID sale de una trayectoria real.
+        if case.get("requires_ticket_id"):
+            real_ticket_id = _provision_real_ticket_id(orchestrator, eval_session_id)
+            query = query.format(ticket_id=real_ticket_id or "TICK-INEXISTENTE")
+
         thread_id = str(uuid.uuid4())
-        out = orchestrator.run(case["query"], session_id=eval_session_id, thread_id=thread_id)
+        out = orchestrator.run(query, session_id=eval_session_id, thread_id=thread_id)
 
         # En modo batch (evals) no hay un humano para confirmar la creación de
         # tickets sensibles: se resuelve automáticamente el interrupt con
@@ -86,7 +120,7 @@ def run_evals():
 
         results_table.append([
             case["id"],
-            case["query"][:40] + "...",
+            query[:40] + "...",
             case["expected_domain"],
             predicted,
             "SUCCESS" if routing_ok else "FAIL",

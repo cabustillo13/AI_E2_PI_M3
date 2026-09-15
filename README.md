@@ -158,7 +158,7 @@ python -m evals.runner
 
 ### Reporte de Métricas
 
-## Reporte de Evaluación de Trayectorias M3
+## Reporte de Evaluación de Trayectorias
 
 | ID | Consulta | Esperado | Obtenido | Routing | E2E |
 |----|----------|----------|----------|---------|-----|
@@ -176,22 +176,22 @@ python -m evals.runner
 | 12 | No puedo conectarme a la red WiFi de la ... | IT | IT | SUCCESS | SUCCESS |
 | 13 | ¿Cuál es el tope máximo de reembolso par... | Finance | Finance | SUCCESS | SUCCESS |
 | 14 | ¿Cómo rindo los gastos de un viaje corpo... | Finance | Finance | SUCCESS | SUCCESS |
-| 15 | ¿Qué día del mes se deposita el sueldo?... | Finance | HR | FAIL | FAIL |
+| 15 | ¿Qué día del mes se deposita el sueldo?... | Finance | Finance | SUCCESS | SUCCESS |
 | 16 | ¿Cómo solicito el comprobante de retenci... | Finance | Finance | SUCCESS | SUCCESS |
 | 17 | ¿Cuál es el formato requerido para carga... | Finance | Finance | SUCCESS | SUCCESS |
 | 18 | Necesito solicitar un adelanto de viátic... | Finance | Finance | SUCCESS | SUCCESS |
 | 19 | Por favor quiero crear ticket para cambi... | Ticket | Ticket | SUCCESS | SUCCESS |
 | 20 | Crear ticket para solicitar acceso a la ... | Ticket | Ticket | SUCCESS | SUCCESS |
-| 21 | ¿Cuál es el estado del ticket TICK-8A9B2... | Ticket | Ticket | SUCCESS | FAIL |
-| 22 | Quiero consultar estado del ticket TICK-... | Ticket | Ticket | SUCCESS | FAIL |
+| 21 | ¿Cuál es el estado del ticket TICK-6F8D4... | Ticket | Ticket | SUCCESS | SUCCESS |
+| 22 | Quiero consultar estado del ticket TICK-... | Ticket | Ticket | SUCCESS | SUCCESS |
 | 23 | Crear ticket por falla en el sistema de ... | Ticket | Ticket | SUCCESS | SUCCESS |
 | 24 | Por favor crear ticket para configurar m... | Ticket | Ticket | SUCCESS | SUCCESS |
-| 25 | Consultar estado del ticket TICK-F4E3D2... | Ticket | Ticket | SUCCESS | FAIL |
+| 25 | Consultar estado del ticket TICK-676C5A... | Ticket | Ticket | SUCCESS | SUCCESS |
 
-**Accuracy de Routing:** 96.00% (24/25)  
-**Tasa de Éxito End-to-End:** 84.00% (21/25)
+**Accuracy de Routing:** 100.00% (25/25)  
+**Tasa de Éxito End-to-End:** 100.00% (25/25)
 
-> **Sesión de Langfuse para esta corrida:** `eval_run_20260912T040857`  
+> **Sesión de Langfuse para esta corrida:** `eval_run_20260915T003426`  
 > (buscala en Langfuse Cloud > Sessions para navegar cada trace individualmente)
 
 ---
